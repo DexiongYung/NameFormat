@@ -1,15 +1,17 @@
-import torch
 import argparse
-import string
 import json
+import string
+from collections import OrderedDict
+
 import matplotlib.pyplot as plt
 import pandas as pd
+import torch
 import torch.nn as nn
-from collections import OrderedDict
-from Utilities.Convert import *
-from Model.NameFormatModel import NameFormatModel
-from Datasets.FormatDataset import FormatDataset
 from torch.utils.data import DataLoader
+
+from Datasets.FormatDataset import FormatDataset
+from Model.NameFormatModel import NameFormatModel
+from Utilities.Convert import *
 
 parser = argparse.ArgumentParser()
 parser.add_argument('--name', help='Name of the Session', nargs='?', default='name_format', type=str)
@@ -75,6 +77,7 @@ def train(x: list, trg: torch.Tensor):
 
     return loss.item()
 
+
 def iter_train(dl: DataLoader, epochs: int = EPOCH, path: str = "Checkpoints/", print_every: int = PRINTS):
     all_losses = []
     total_loss = 0
@@ -89,13 +92,16 @@ def iter_train(dl: DataLoader, epochs: int = EPOCH, path: str = "Checkpoints/", 
                 plot_losses(all_losses, x_label="Epochs", y_label="NLLosss", filename=NAME)
                 torch.save(model.state_dict(), os.path.join(f"{path}{NAME}.path.tar"))
 
+
 def load_json(jsonpath: str) -> dict:
     with open(jsonpath) as jsonfile:
         return json.load(jsonfile, object_pairs_hook=OrderedDict)
 
+
 def save_json(jsonpath: str, content):
     with open(jsonpath, 'w') as jsonfile:
         json.dump(content, jsonfile)
+
 
 def plot_losses(loss: list, x_label: str, y_label: str, folder: str = "Result", filename: str = None):
     x = list(range(len(loss)))
@@ -107,12 +113,13 @@ def plot_losses(loss: list, x_label: str, y_label: str, folder: str = "Result", 
     plt.savefig(f"{folder}/{filename}")
     plt.close()
 
+
 to_save = {
     'session_name': NAME,
     'hidden_size': HIDDEN_SZ,
     'num_layers': NUM_LAYERS,
     'input_size': len(INPUT),
-    'ouput_size': len(OUTPUT), 
+    'ouput_size': len(OUTPUT),
     'input': INPUT,
     'output': OUTPUT
 }

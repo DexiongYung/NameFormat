@@ -1,6 +1,7 @@
 import torch
 from torch import Tensor
 
+
 def srcsTensor(names: list, max_name_len: int, allowed_letters: list):
     """
     Turn a list of name strings into a tensor of one-hot letter vectors
@@ -20,8 +21,8 @@ def srcsTensor(names: list, max_name_len: int, allowed_letters: list):
 def trgsTensor(formats: list):
     batch_sz = len(formats)
     ret = torch.zeros(1, batch_sz).type(torch.LongTensor)
-    
+
     for i in range(batch_sz):
         ret[0][i] = int(formats[i])
-    
+
     return ret
