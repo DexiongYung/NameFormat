@@ -21,7 +21,7 @@ parser.add_argument('--epoch', help='Number of epochs', nargs='?', default=5000,
 parser.add_argument('--train_file', help='File to train on', nargs='?', default='Data/FullNames.csv', type=str)
 parser.add_argument('--name_col', help='Column header of data name', nargs='?', default='name', type=str)
 parser.add_argument('--format_col', help='Column header of data format', nargs='?', default='format', type=str)
-parser.add_argument('--print', help='Print every', nargs='?', default=100, type=int)
+parser.add_argument('--print', help='Print every', nargs='?', default=5, type=int)
 parser.add_argument('--continue_training', help='Boolean whether to continue training an existing model', nargs='?',
                     default=False, type=bool)
 
@@ -60,6 +60,7 @@ DEVICE = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
 
 
 def train(x: list, trg: torch.Tensor):
+    optimizer.zero_grad()
     batch_sz = len(x)
     max_len = len(max(x, key=len))
 
@@ -70,9 +71,7 @@ def train(x: list, trg: torch.Tensor):
     output = model.forward(src)
     loss = criterion(output, trg.to(DEVICE))
     loss.backward()
-    
-    for p in model.parameters():
-        p.data.add_(-LR, p.grad.data)
+    optimizer.step()
 
     return loss.item()
 
@@ -128,5 +127,6 @@ dl = DataLoader(ds, batch_size=BATCH_SZ, shuffle=True)
 model = NameFormatModel(DEVICE, len(INPUT), HIDDEN_SZ, len(OUTPUT), NUM_LAYERS)
 model.to(DEVICE)
 criterion = nn.NLLLoss()
+optimizer = torch.optim.Adam(model.parameters(), lr=LR)
 
 iter_train(dl)
