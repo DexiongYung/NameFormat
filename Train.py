@@ -1,6 +1,7 @@
 import argparse
 import json
 import string
+import os
 from collections import OrderedDict
 
 import matplotlib.pyplot as plt
@@ -17,7 +18,7 @@ parser = argparse.ArgumentParser()
 parser.add_argument('--name', help='Name of the Session', nargs='?', default='name_format', type=str)
 parser.add_argument('--hidden_size', help='Size of the hidden state tensors', nargs='?', default=256, type=int)
 parser.add_argument('--num_layers', help='Number of layers', nargs='?', default=5, type=int)
-parser.add_argument('--batch', help='Batch size', nargs='?', default=256, type=int)
+parser.add_argument('--batch', help='Batch size', nargs='?', default=100, type=int)
 parser.add_argument('--lr', help='Learning rate', nargs='?', default=0.005, type=float)
 parser.add_argument('--epoch', help='Number of epochs', nargs='?', default=5000, type=int)
 parser.add_argument('--train_file', help='File to train on', nargs='?', default='Data/FullNames.csv', type=str)
